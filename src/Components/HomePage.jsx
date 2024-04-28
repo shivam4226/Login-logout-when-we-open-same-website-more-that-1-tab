@@ -13,29 +13,42 @@ const HomePage = () => {
   const [images, setImages] = useState([]);
 
  useEffect(() => {
-  const storageSelection = localStorage.getItem('selectedStorage');
-  const isSessionStorage = storageSelection === 'sessionStorage';
+   const storageSlection = localStorage.getItem('selectedStorage');
+    const handleStorageChange = () => {
+      if (storageSlection == 'sessionStorage') {
+        setIsloginStatus(sessionStorage.getItem('isLoggedIn') === 'true');
+      }else{
+        setIsloginStatus(localStorage.getItem('isLoggedIn') === 'true');
+      }
+    };
 
-  const handleStorageChange = () => {
-    setIsloginStatus(isSessionStorage ? sessionStorage.getItem('isLoggedIn') === 'true' : localStorage.getItem('isLoggedIn') === 'true');
-  };
+    window.addEventListener('storage', handleStorageChange);
 
-  window.addEventListener('storage', handleStorageChange);
+    if(storageSlection == 'sessionStorage'){
+       const isLoginStatus = sessionStorage.getItem('isLoggedIn');
+      if (isLoginStatus) {
+        setIsloginStatus(true);
+        setIsLoggedIn(true);
+      }else{
+        setIsloginStatus(false);
+        setIsLoggedIn(false);
+      }
 
-  const isLoginStatus = isSessionStorage ? sessionStorage.getItem('isLoggedIn') : localStorage.getItem('isLoggedIn');
-  if (isLoginStatus) {
-    setIsloginStatus(true);
-    setIsLoggedIn(true);
-  } else {
-    setIsloginStatus(false);
-    setIsLoggedIn(false);
-  }
+    }else{
+      const isLoginStatus = localStorage.getItem('isLoggedIn');
+      if (isLoginStatus) {
+        setIsloginStatus(true);
+        setIsLoggedIn(true);
+      }else{
+        setIsloginStatus(false);
+        setIsLoggedIn(false);
+      }
+    }
 
-  return () => {
-    window.removeEventListener('storage', handleStorageChange);
-  };
-}, [isLoggedIn]);
-
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, [isLoggedIns]);
 
 console.log('islogin--', isLoggedIns);
 
